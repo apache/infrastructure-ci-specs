@@ -1,4 +1,20 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+
+""" ASF CI spec analyzer """
 
 import psutil
 import cpuinfo
@@ -50,12 +66,26 @@ def main():
                 ))
     
     pprint()
-    if cpu['count'] < MINIMUM['cpu'] or mem < MINIMUM['memory']:
-        pprint("Machine does not meet minimum requirements for Apache!\n")
+    pprint("RESULTS:")
+    failed = False
+    if cpu['count'] < MINIMUM['cpu']:
+        print(u"✗ FAIL: CPU count is %u, expected at least %u!" % (cpu['count'], MINIMUM['cpu']))
+        failed = True
+    else:
+        pprint(u'✓ PASS: CPU count is %u, minimum requirement is %u.' % (cpu['count'], MINIMUM['cpu']))
+        
+    if mem < MINIMUM['memory']:
+        print(u"✗ FAIL: Memory available is %uMB, expected at least %uMB!" % (mem, MINIMUM['memory']))
+        failed = True
+    else:
+        pprint(u'✓ PASS: Memory is %uMB, minimum requirement is %uMB.' % (mem, MINIMUM['memory']))
+
+    if failed:
+        pprint(u"✗ FAIL: Machine does not meet minimum requirements for Apache!\n")
         pprint()
         sys.exit(-1)
     else:
-        pprint('System meets Apache build standards')
+        pprint(u'✓ PASS: System meets Apache build standards')
         pprint()
 
 if __name__ == '__main__':
