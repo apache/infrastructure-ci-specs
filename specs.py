@@ -3,6 +3,12 @@
 import psutil
 import cpuinfo
 
+# FAIL if we don't have at least this:
+MINIMUM = {
+    'memory': 7200,
+    'cpu': 2
+}
+
 def main():
     mem = int((psutil.virtual_memory().total /  (1024*1024)))
     swap = int((psutil.swap_memory().total /  (1024*1024)))
@@ -32,5 +38,11 @@ def main():
                     block.address,
                     block.broadcast or "??"
                 ))
+    
+    if cpu['count'] < MINIMUM['cpu'] or mem < MINIMUM['memory']:
+        sys.stderr.write("Machine does not meet minimum requirements for Apache!\n")
+        sys.exit(-1)
+    else:
+        print("System meets requirements for Apache.")
 if __name__ == '__main__':
     main()
