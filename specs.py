@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
 import psutil
+import cpuinfo
 
 def main():
     mem = int((psutil.virtual_memory().total /  (1024*1024)))
     swap = int((psutil.swap_memory().total /  (1024*1024)))
-    cpu = psutil.cpu_freq(percpu = True)
+    cpu = cpuinfo.get_cpu_info()
     
     print("Memory available: %uMB" % mem)
     print("Swap available: %uMB" % swap)
-    print("Cores: %u x %uMHz" % (len(cpu), cpu[0].max))
+    print("Cores: %u x %uMHz (%s)" % (cpu['count'], cpu['hz_advertised_raw'][0]/1000000, cpu['brand']))
     
     for disk in psutil.disk_partitions():
         if not '/snap' in disk.mountpoint:
