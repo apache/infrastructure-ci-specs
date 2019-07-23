@@ -18,6 +18,7 @@
 
 import psutil
 import cpuinfo
+import sys
 
 # FAIL if we don't have at least this:
 MINIMUM = {
