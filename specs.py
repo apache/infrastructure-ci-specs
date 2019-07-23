@@ -23,7 +23,8 @@ import sys
 # FAIL if we don't have at least this:
 MINIMUM = {
     'memory': 7200,
-    'cpu': 2
+    'cpu': 2,
+    'ROOTDISK': 40,
 }
 def pprint(txt = None):
     if not txt:
@@ -36,7 +37,7 @@ def main():
     mem = int((psutil.virtual_memory().total /  (1024*1024)))
     swap = int((psutil.swap_memory().total /  (1024*1024)))
     cpu = cpuinfo.get_cpu_info()
-    
+    rootdisk = 0
     pprint()
     print("#                        Apache Build System Spec Analyzer                         #")
     pprint()
@@ -51,6 +52,8 @@ def main():
         if not '/snap' in disk.mountpoint:
             d = psutil.disk_usage(disk.mountpoint)
             pprint("- %s: %uGB free out of %uGB total" % (disk.mountpoint, d.free/(1024*1024*1024), d.total/(1024*1024*1024)))
+            if disk.mountpoint == '/':
+                rootdisk = d.free/(1024*1024*1024)
 
     pprint("NETWORK:")
     ifs = psutil.net_io_counters(pernic=True)
@@ -80,7 +83,14 @@ def main():
         failed = True
     else:
         pprint(u'✓ PASS: Memory is %uMB, minimum requirement is %uMB.' % (mem, MINIMUM['memory']))
+    
+    if rootdisk < MINIMUM['ROOTDISK']:
+        print(u"✗ FAIL: Root (/) partition has %uGB free space, expected at least %uGB!" % (rootdisk, MINIMUM['ROOTDISK']))
+        failed = True
+    else:
+        pprint(u'✓ PASS: Root (/) partition has %uGB free space, minimum requirement is %uGB.' % (rootdisk, MINIMUM['ROOTDISK']))
 
+    
     if failed:
         pprint(u"✗ FAIL: Machine does not meet minimum requirements for Apache!\n")
         pprint()
