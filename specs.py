@@ -79,13 +79,13 @@ def main():
         pprint(u'✓ PASS: CPU count is %u, minimum requirement is %u.' % (cpu['count'], MINIMUM['cpu']))
         
     if mem < MINIMUM['memory']:
-        print(u"✗ FAIL: Memory available is %uMB, expected at least %uMB!" % (mem, MINIMUM['memory']))
+        pprint(u"✗ FAIL: Memory available is %uMB, expected at least %uMB!" % (mem, MINIMUM['memory']))
         failed = True
     else:
         pprint(u'✓ PASS: Memory is %uMB, minimum requirement is %uMB.' % (mem, MINIMUM['memory']))
     
     if rootdisk < MINIMUM['ROOTDISK']:
-        print(u"✗ FAIL: Root (/) partition has %uGB free space, expected at least %uGB!" % (rootdisk, MINIMUM['ROOTDISK']))
+        pprint(u"✗ FAIL: Root (/) partition has %uGB free space, expected at least %uGB!" % (rootdisk, MINIMUM['ROOTDISK']))
         failed = True
     else:
         pprint(u'✓ PASS: Root (/) partition has %uGB free space, minimum requirement is %uGB.' % (rootdisk, MINIMUM['ROOTDISK']))
