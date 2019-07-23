@@ -73,7 +73,7 @@ def main():
     pprint("RESULTS:")
     failed = False
     if cpu['count'] < MINIMUM['cpu']:
-        print(u"✗ FAIL: CPU count is %u, expected at least %u!" % (cpu['count'], MINIMUM['cpu']))
+        pprint(u"✗ FAIL: CPU count is %u, expected at least %u!" % (cpu['count'], MINIMUM['cpu']))
         failed = True
     else:
         pprint(u'✓ PASS: CPU count is %u, minimum requirement is %u.' % (cpu['count'], MINIMUM['cpu']))
